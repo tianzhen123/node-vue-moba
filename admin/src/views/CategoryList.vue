@@ -20,22 +20,37 @@
 </template>
 <script>
 export default {
-    data() {
+  data() {
     return {
       items: []
     };
   },
   methods: {
-      async fetch(){
-          const res = await this.$http.get('categories')
-          this.items = res.data
-      }
+    async fetch() {
+      const res = await this.$http.get("/rest/categories");
+      this.items = res.data;
+    },
+    async remove(row){
+      this.$confirm(`是否确定删除分类 "${row.name}"`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+          let res = await this.$http.delete(`rest/categories/${row._id}`)
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          this.fetch()
+        }).catch(()=>{
+
+        });
+    }
   },
   created() {
-      this.fetch()
-  },
-}
+    this.fetch();
+  }
+};
 </script>
 <style scoped>
-
 </style>
