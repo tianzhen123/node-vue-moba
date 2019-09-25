@@ -1,20 +1,68 @@
 <template>
   <div>
-    <h1>{{id?"编辑分类":"新建分类"}}</h1>
+    <h1>{{id?"编辑英雄":"新建英雄"}}</h1>
     <el-form label-width="120px" @submit.native.prevent="save">
       <el-form-item label="名称">
         <el-input v-model="model.name"></el-input>
       </el-form-item>
-      <el-form-item label="图标">
+      <el-form-item label="称号">
+        <el-input v-model="model.title"></el-input>
+      </el-form-item>
+      <el-form-item label="头像">
         <el-upload
           class="avatar-uploader"
           :action="$http.defaults.baseURL +'/upload'"
           :show-file-list="false"
           :on-success="afterUpload"
         >
-          <img v-if="model.icon" :src="model.icon" class="avatar" />
+          <img v-if="model. avator" :src="model.avator" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
+      </el-form-item>
+      <el-form-item label="类型">
+        <el-select v-model="model.categories" multiple>
+          <el-option v-for="item in categories"
+          :label="item.name"
+          :value="item._id"
+          :key="item._id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="难度">
+        <el-rate style="margin-top:0.5rem" :max="9" show-score v-model="model.scores.difficult"></el-rate>
+      </el-form-item>
+      <el-form-item label="技能">
+        <el-rate style="margin-top:0.5rem" :max="9" show-score v-model="model.scores.skills"></el-rate>
+      </el-form-item>
+      <el-form-item label="攻击">
+        <el-rate style="margin-top:0.5rem" :max="9" show-score v-model="model.scores.attack"></el-rate>
+      </el-form-item>
+      <el-form-item label="生存">
+        <el-rate style="margin-top:0.5rem" :max="9" show-score v-model="model.scores.survive"></el-rate>
+      </el-form-item>
+      <el-form-item label="顺风出装">
+        <el-select v-model="model.items1" multiple>
+          <el-option v-for="item in items"
+          :label="item.name"
+          :value="item._id"
+          :key="item._id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="逆风出装">
+        <el-select v-model="model.items2" multiple>
+          <el-option v-for="item in items"
+          :label="item.name"
+          :value="item._id"
+          :key="item._id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="使用技巧">
+        <el-input type="textarea" v-model="model.usageTips"></el-input>
+      </el-form-item>
+      <el-form-item label="对抗技巧">
+        <el-input type="textarea" v-model="model.battleTips"></el-input>
+      </el-form-item>
+      <el-form-item label="团战思路">
+        <el-input type="textarea" v-model="model.teamTips"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" native-type="submit">保存</el-button>
@@ -29,32 +77,54 @@ export default {
   },
   data() {
     return {
-      model: {}
+      model: {
+        name: '',
+        avator: '',
+        categories:[],
+        scores:{
+          difficult:0
+        },
+        items1:[],
+        items2:[],
+      },
+      categories:[],
+      items: [],
     };
   },
   methods: {
     async save() {
       let res;
       if (this.id) {
-        res = await this.$http.put(`rest/items/${this.id}`, this.model);
+        res = await this.$http.put(`rest/heroes/${this.id}`, this.model);
       } else {
-        res = await this.$http.post("rest/items", this.model);
+        res = await this.$http.post("rest/heroes", this.model);
       }
-      this.$router.push("/items/list");
+      this.$router.push("/heroes/list");
       this.$message({
         type: "success",
         message: "保存成功"
       });
     },
     async fetch() {
-      const res = await this.$http.get(`/rest/items/${this.id}`);
-      this.model = res.data;
+      const res = await this.$http.get(`/rest/heroes/${this.id}`);
+      this.model = Object.assign({},this.model,res.data)
+    },
+    async fetchCategories() {
+      const res = await this.$http.get(`/rest/categories`);
+      this.categories = res.data;
+    },
+    async fetchItems() {
+      const res = await this.$http.get(`/rest/items`);
+      this.items = Object.assign({},this.model,res.data)
     },
     afterUpload(res){
-      this.$set(this.model,'icon',res.url)
+      // this.$set(this.model,'avator',res.url)
+      this.model.avator = res.url
     }
   },
   created() {
+    this.fetchCategories()
+    this.fetchItems()
     this.id && this.fetch();
   }
 };
