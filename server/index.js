@@ -7,6 +7,10 @@ app.use(express.json())
 app.use('/uploads', express.static(__dirname + '/uploads'))
 
 require("./plugins/db")(app)
+
+// 等同于 
+// var router = require("./routers/admin")
+// router(app)
 require("./routers/admin")(app)
 
 app.listen(3000,()=>{
