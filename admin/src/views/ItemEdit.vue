@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{id?"编辑分类":"新建分类"}}</h1>
+    <h1>{{id?"编辑":"新建"}}分类</h1>
     <el-form label-width="120px" @submit.native.prevent="save">
       <el-form-item label="名称">
         <el-input v-model="model.name"></el-input>
@@ -9,6 +9,7 @@
         <el-upload
           class="avatar-uploader"
           :action="$http.defaults.baseURL +'/upload'"
+          :headers='getAuthHeaders()'
           :show-file-list="false"
           :on-success="afterUpload"
         >

@@ -22,27 +22,17 @@ import AdminUserList from "./views/AdminUserList.vue";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   routes: [
-    {path:'/login',name:'login',component:Login},
+    { path: '/login', name: 'login', component: Login, meta: { isPublic: true } },
     {
       path: "/",
       name: "main",
       component: Main,
       children: [
-        {
-          path: "categories/create",
-          component: CategoryEdit
-        },
-        {
-          path: "categories/edit/:id",
-          component: CategoryEdit,
-          props: true
-        },
-        {
-          path: "categories/list",
-          component: CategoryList
-        },
+        { path: "categories/create", component: CategoryEdit },
+        { path: "categories/edit/:id", component: CategoryEdit, props: true },
+        { path: "categories/list", component: CategoryList },
 
         {
           path: "items/create",
@@ -87,3 +77,10 @@ export default new Router({
     }
   ]
 });
+router.beforeEach((to, form, next) => {
+  if(!to.meta.isPublic && !localStorage.token){
+    return next('/login')
+  }
+  next()
+})
+export default router;

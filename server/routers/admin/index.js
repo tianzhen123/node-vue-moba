@@ -54,16 +54,16 @@ module.exports = app => {
     const multer = require('multer')
     const upload = multer({ dest: __dirname + '/../../uploads' });
     // 文件上传
-    app.post('/admin/api/upload', authMiddleWare, upload.single('file'), async (req, res) => {
+    app.post('/admin/api/upload', authMiddleWare(), upload.single('file'), async (req, res) => {
         const file = req.file;
         file.url = `http://localhost:3000/uploads/${file.filename}`;
-        res.send(file)
+        res.send(file);
     })
 
-    app.post('/admin/api/login', authMiddleWare(), async (req, res) => {
+    // 登录
+    app.post('/admin/api/login', async (req, res) => {
         const { username, password } = req.body;
         // 1. 根据用户名找用户
-
         const user = await AdminUser.findOne({ username: username }).select('password');
         assert(user, 422, '用户不存在')
         // if (!user) {
