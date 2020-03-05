@@ -34,11 +34,10 @@ export default {
   },
   methods: {
     async save() {
-      let res;
       if (this.id) {
-        res = await this.$http.put(`rest/items/${this.id}`, this.model);
+        await this.$http.put(`rest/items/${this.id}`, this.model);
       } else {
-        res = await this.$http.post("rest/items", this.model);
+        await this.$http.post("rest/items", this.model);
       }
       this.$router.push("/items/list");
       this.$message({
