@@ -15,6 +15,8 @@ require("./plugins/db")(app)
 // router(app)
 require("./routers/admin")(app)
 
+require("./routers/web")(app)
+
 app.listen(3000,()=>{
     console.log("已启动");
 })

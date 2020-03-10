@@ -26,6 +26,20 @@
         收起
       </div>
     </div>
+    <!-- end of icons -->
+    <m-list-card icon="menu1" title="新闻资讯" :categories="newsCats">
+      <template #items="{category}">
+        <div class="py-2" v-for="(item,i) in category.newsList" :key="i">
+        <span>[{{item.categoryName}}]</span>
+        <span> | </span>
+        <span>{{item.title}}</span>
+        <span>{{item.date}}</span>
+      </div>
+      </template>
+    </m-list-card>
+    <m-card title="英雄列表" icon="menu1"></m-card>
+    <m-card title="精彩视频" icon="menu1"></m-card>
+    <m-card title="英雄列表" icon="menu1"></m-card>
   </div>
 </template>
 
@@ -38,7 +52,33 @@ export default {
         pagination: {
           el: ".pagination-home"
         }
-      }
+      },
+      newsCats: [
+        {
+          name:'热门',
+          newsList: new Array(5).fill({}).map(() =>({
+              categoryName:'热门',
+              title:'3月10日全服不停机更新公告',
+              date:'03/10'
+          }))
+        },
+        {
+          name:'新闻',
+          newsList: new Array(5).fill({}).map(() =>({
+              categoryName:'新闻',
+              title:'3月11日全服不停机更新公告',
+              date:'03/11'
+          }))
+        },
+        {
+          name:'公告',
+          newsList: new Array(5).fill({}).map(() =>({
+              categoryName:'公告',
+              title:'3月12日全服不停机更新公告',
+              date:'03/12'
+          }))
+        },
+      ]
     };
   },
   computed: {

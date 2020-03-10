@@ -124,11 +124,23 @@ a {
 
 // nac
 .nav {
+  display: flex;
   .nav-item {
     border-bottom: 3px solid transparent;
     padding-bottom: 0.2rem;
     &.active {
-      border-bottom: 3px solid #fff;
+      color: map-get($colors, "primary");
+      border-bottom: 3px solid map-get($colors, "primary");
+    }
+  }
+  &.nav-inverse {
+    .nav-item {
+      border-bottom: 3px solid transparent;
+      padding-bottom: 0.2rem;
+      color: map-get($colors, "white");
+      &.active {
+        border-bottom: 3px solid map-get($colors, "white");
+      }
     }
   }
 }
@@ -143,11 +155,9 @@ a {
     height: 1.5385rem;
     background-position: 63.546% 15.517%;
   }
-  &.sprite-arrow{
+  &.sprite-arrow {
     height: 0.7692rem;
     width: 0.7692rem;
     background-position: 38.577% 52.076%;
   }
 }
-
-
