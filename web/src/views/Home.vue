@@ -29,11 +29,11 @@
     <!-- end of icons -->
     <m-list-card icon="menu1" title="新闻资讯" :categories="newsCats">
       <template #items="{category}">
-        <div class="py-2" v-for="(item,i) in category.newsList" :key="i">
-        <span>[{{item.categoryName}}]</span>
-        <span> | </span>
-        <span>{{item.title}}</span>
-        <span>{{item.date}}</span>
+        <div class="py-2 fs-lg d-flex" v-for="(item,i) in category.newsList" :key="i">
+        <span class="text-info">[{{item.categoryName}}]</span>
+        <span class="px-2">|</span>
+        <span class="flex-1 text-dark-1 text-ellipsis pr-2">{{item.title}}</span>
+        <span class="text-gray-1 fs-sm">{{item.createdAt | date}}</span>
       </div>
       </template>
     </m-list-card>
@@ -44,8 +44,14 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
 export default {
   name: "carrousel",
+  filters:{
+    date(val){
+      return dayjs(val).format('MM/DD')
+    }
+  },
   data() {
     return {
       swiperOption: {
@@ -53,43 +59,23 @@ export default {
           el: ".pagination-home"
         }
       },
-      newsCats: [
-        {
-          name:'热门',
-          newsList: new Array(5).fill({}).map(() =>({
-              categoryName:'热门',
-              title:'3月10日全服不停机更新公告',
-              date:'03/10'
-          }))
-        },
-        {
-          name:'新闻',
-          newsList: new Array(5).fill({}).map(() =>({
-              categoryName:'新闻',
-              title:'3月11日全服不停机更新公告',
-              date:'03/11'
-          }))
-        },
-        {
-          name:'公告',
-          newsList: new Array(5).fill({}).map(() =>({
-              categoryName:'公告',
-              title:'3月12日全服不停机更新公告',
-              date:'03/12'
-          }))
-        },
-      ]
+      newsCats: []
     };
+  },
+  created() {
+    this.fetchNewsCats()
+  },
+  methods:{
+    async fetchNewsCats(){ //  获取 news 列表
+      const res = await this.$http.get('news/list')
+      this.newsCats = res.data
+    }
   },
   computed: {
     swiper() {
       return this.$refs.mySwiper.swiper;
     }
   },
-  mounted() {},
-  methods: {
-    callback() {}
-  }
 };
 </script>
 <style lang="scss">
