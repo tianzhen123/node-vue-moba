@@ -30,26 +30,35 @@
     <m-list-card icon="menu1" title="新闻资讯" :categories="newsCats">
       <template #items="{category}">
         <div class="py-2 fs-lg d-flex" v-for="(item,i) in category.newsList" :key="i">
-        <span class="text-info">[{{item.categoryName}}]</span>
-        <span class="px-2">|</span>
-        <span class="flex-1 text-dark-1 text-ellipsis pr-2">{{item.title}}</span>
-        <span class="text-gray-1 fs-sm">{{item.createdAt | date}}</span>
-      </div>
+          <span class="text-info">[{{item.categoryName}}]</span>
+          <span class="px-2">|</span>
+          <span class="flex-1 text-dark-1 text-ellipsis pr-2">{{item.title}}</span>
+          <span class="text-gray-1 fs-sm">{{item.createdAt | date}}</span>
+        </div>
       </template>
     </m-list-card>
-    <m-card title="英雄列表" icon="menu1"></m-card>
+    <m-list-card icon="card-hero" title="英雄列表" :categories="heroCats">
+      <template #items="{category}">
+        <div class="d-flex flex-wrap">
+          <div class="p-2" style="width:20%" v-for="(hero,i) in category.heroList" :key="i">
+            <img class="w-100" :src="hero.avator" />
+            <div class="text-center">{{hero.name}}</div>
+          </div>
+        </div>
+      </template>
+    </m-list-card>
     <m-card title="精彩视频" icon="menu1"></m-card>
     <m-card title="英雄列表" icon="menu1"></m-card>
   </div>
 </template>
 
 <script>
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
 export default {
   name: "carrousel",
-  filters:{
-    date(val){
-      return dayjs(val).format('MM/DD')
+  filters: {
+    date(val) {
+      return dayjs(val).format("MM/DD");
     }
   },
   data() {
@@ -59,23 +68,30 @@ export default {
           el: ".pagination-home"
         }
       },
-      newsCats: []
+      newsCats: [],
+      heroCats: []
     };
   },
   created() {
-    this.fetchNewsCats()
+    this.fetchNewsCats();
+    this.fetchHeroCats();
   },
-  methods:{
-    async fetchNewsCats(){ //  获取 news 列表
-      const res = await this.$http.get('news/list')
-      this.newsCats = res.data
+  methods: {
+    async fetchNewsCats() {
+      //  获取 news 列表
+      const res = await this.$http.get("news/list");
+      this.newsCats = res.data;
+    },
+    async fetchHeroCats() {
+      const res = await this.$http.get("heroes/list");
+      this.heroCats = res.data;
     }
   },
   computed: {
     swiper() {
       return this.$refs.mySwiper.swiper;
     }
-  },
+  }
 };
 </script>
 <style lang="scss">
