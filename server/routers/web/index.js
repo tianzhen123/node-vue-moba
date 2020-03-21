@@ -139,5 +139,15 @@ module.exports = app => {
         res.send(cats)
     })
 
+    // 文章详情
+    router.get('/article/:id', async (req, res) => {
+        const data = await Article.findById(req.params.id).lean()
+        data.related = await Article.find().where({
+            categories: { $in: data.categories },
+            title: {$ne: Article.title}
+        }).limit(2)
+        res.send(data)
+    })
+
     app.use('/web/api', router)
 }
